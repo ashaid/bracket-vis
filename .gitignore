@@ -1,0 +1,14 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Bracket data files
+*.txt
