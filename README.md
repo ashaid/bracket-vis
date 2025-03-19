@@ -1,6 +1,6 @@
 # NCAA Bracket Viewer
 
-A terminal-based application to help view and navigate NCAA tournament brackets, making it easier to input picks on websites.
+A terminal-based application to help view and navigate NCAA tournament brackets, making it easier to input picks.
 
 ## Features
 
@@ -14,14 +14,13 @@ A terminal-based application to help view and navigate NCAA tournament brackets,
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/bracket-vis.git
+git clone https://github.com/ashaid/bracket-vis.git
 cd bracket-vis
 ```
 
 ## Usage
 
 ```bash
-# Run directly from the project root
 python main.py <path-to-bracket-file>
 ```
 
@@ -65,9 +64,3 @@ bracket-vis/
 - Python 3.6+
 - curses (included in standard library for Unix/Linux/macOS)
   - For Windows users, you'll need to install the `windows-curses` package
-
-## License
-
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0) - a strong copyleft license that requires anyone who distributes your code or derivative works to make the source available under the same terms.
-
-See the [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) for more details.
