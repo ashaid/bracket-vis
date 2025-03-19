@@ -28,7 +28,7 @@ def show_welcome_screen(stdscr):
         "",
         "How to use:",
         "- Each bracket will be displayed one at a time",
-        "- Press any key to navigate between screens",
+        "- Press the left and right arrow keys to navigate between screens",
         "- Teams are shown for each round of the tournament",
         "- The champion is highlighted at the end",
         "",
