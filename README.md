@@ -2,6 +2,10 @@
 
 A terminal-based application to help view and navigate NCAA tournament brackets, making it easier to input picks.
 
+**Note**: This is an internal tool intended to be used with project Marathon.
+
+![Welcome Screen](images/welcome.png)
+
 ## Features
 
 - Parse and display NCAA tournament brackets
@@ -13,7 +17,6 @@ A terminal-based application to help view and navigate NCAA tournament brackets,
 ## Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/ashaid/bracket-vis.git
 cd bracket-vis
 ```
@@ -23,6 +26,11 @@ cd bracket-vis
 ```bash
 python main.py <path-to-bracket-file>
 ```
+
+### Example Brackets
+
+![Bracket Example 1](images/bracket1.png)
+![Bracket Example 2](images/bracket2.png)
 
 ### Input File Format
 
@@ -36,7 +44,7 @@ Each bracket is enclosed in square brackets, with team names listed in order of 
 
 ## Navigation
 
-- Press any key to navigate between screens
+- Press the left and right arrow keys to navigate between screens
 - Each bracket will be displayed one at a time
 - Multiple rounds are shown on each page when possible
 
@@ -48,13 +56,13 @@ bracket-vis/
 │   ├── __init__.py
 │   ├── ui/
 │   │   ├── __init__.py
-│   │   ├── components.py      # UI components like boxes, team displays
-│   │   ├── screens.py         # Welcome screen, help screen
-│   │   └── bracket_view.py    # Main bracket display logic
+│   │   ├── components.py    # UI components like boxes, team displays
+│   │   ├── screens.py       # Welcome screen, help screen
+│   │   └── bracket_view.py  # Main bracket display logic
 │   ├── data/
 │   │   ├── __init__.py
-│   │   └── parser.py          # File parsing and data handling
-├── main.py                    # Main entry point
+│   │   └── parser.py        # File parsing and data handling
+├── main.py                  # Main entry point
 ├── LICENSE
 └── README.md
 ```
@@ -63,4 +71,4 @@ bracket-vis/
 
 - Python 3.6+
 - curses (included in standard library for Unix/Linux/macOS)
-  - For Windows users, you'll need to install the `windows-curses` package
+- For Windows users, you'll need to install the `windows-curses` package

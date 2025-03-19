@@ -36,8 +36,6 @@ def parse_input_file(filename):
         # Move past this bracket
         bracket_start = bracket_end + 1
     
-    # Debug output
-    print(f"Found {len(brackets)} brackets")
     
     return brackets
 

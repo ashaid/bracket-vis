@@ -31,8 +31,6 @@ def main(stdscr):
     try:
         brackets = parse_input_file(filename)
         
-        # Debug output
-        print(f"Found {len(brackets)} brackets")
         
         if not brackets:
             show_error_screen(stdscr, "No valid brackets found in the input file.")
