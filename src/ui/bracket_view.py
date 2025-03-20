@@ -18,7 +18,7 @@ def format_bracket(stdscr, bracket_list, bracket_num, round_sizes, round_names, 
         bracket_num: Number of the current bracket (for display purposes)
         round_sizes: List of integers representing the number of teams in each round
         round_names: List of strings with round names
-    """
+    """    
     # Get terminal dimensions
     max_y, max_x = stdscr.getmaxyx()
     
@@ -79,7 +79,7 @@ def format_bracket(stdscr, bracket_list, bracket_num, round_sizes, round_names, 
     current_page = 0
     
     while True:
-        stdscr.clear()
+        stdscr.clear()  # Make sure the screen is cleared
         
         # Draw bracket box
         draw_box(stdscr, 0, 0, max_y - 1, max_x - 1)
@@ -103,7 +103,7 @@ def format_bracket(stdscr, bracket_list, bracket_num, round_sizes, round_names, 
             if i < len(round_sizes):
                 current_start_idx += round_sizes[i]
         
-        # Display rounds side by side
+      # Display rounds side by side
         for col in range(rounds_on_page):
             round_idx = start_round + col
             if round_idx >= len(round_sizes):
@@ -124,42 +124,83 @@ def format_bracket(stdscr, bracket_list, bracket_num, round_sizes, round_names, 
             
             # Teams in this round
             current_y = 5
-            max_lines_in_col = max_y - 8  # Leave space for headers and footer
+            max_lines_in_col = max_y - 10  # Leave space for headers and footer
+            
+            # Calculate the starting index for teams in this round
+            # KEEP THIS FIX: Recalculate start_idx for each round
+            round_start_idx = 0
+            for i in range(round_idx):
+                round_start_idx += round_sizes[i]
             
             # Calculate if we need to shrink display due to many teams
             compress_display = size > max_lines_in_col
-            line_skip = 1 if not compress_display else max(1, size // max_lines_in_col)
+            line_skip = 1
             
-            for j in range(0, size, line_skip):
-                if current_y >= max_y - 5:  # Leave space for footer
-                    break
-                    
-                team_idx = current_start_idx + j
-                if team_idx < len(bracket_list):
-                    try:
-                        team = bracket_list[team_idx]
-                        
-                        # Determine if this is a champion team
-                        is_champion = (round_idx == len(round_sizes) - 1)
-                        
-                        # Display the team
-                        display_team(
-                            stdscr, 
-                            current_y, 
-                            col_x, 
-                            j+1, 
-                            team, 
-                            is_champion=is_champion, 
-                            max_width=column_widths[round_idx]
-                        )
-                    except Exception as e:
-                        # If there's an error with a team, show a placeholder
-                        error_msg = f"{j+1}. [Error: invalid team]"
-                        stdscr.addstr(current_y, col_x, error_msg[:column_widths[round_idx]])
-                    
+            # If we need to compress, calculate how many teams to skip to fit all
+            if compress_display:
+                # Instead of skipping teams, we'll reduce vertical spacing to fit all teams
+                line_skip = max(1, (size // max_lines_in_col) + 1)
+                
+                # Adjust current_y to account for compressed display
+                teams_per_line = line_skip
+                if teams_per_line > 1:
+                    # We'll display multiple teams per line if needed
+                    stdscr.addstr(current_y, col_x, f"Showing {teams_per_line} teams per line")
                     current_y += 1
             
-            current_start_idx += size
+            # Display all teams for this round
+            for j in range(0, size, line_skip):
+                # Create a line for display
+                line = ""
+                
+                # Add teams to this line
+                for k in range(j, min(j + line_skip, size)):
+                    # KEEP THIS FIX: Use the correct team index for each round
+                    team_idx = round_start_idx + k
+                    
+                    if team_idx < len(bracket_list):
+                        try:
+                            team = bracket_list[team_idx]
+                            # Format team name
+                            formatted_team = str(team).replace('-', ' ').title()
+                            if len(formatted_team) > 12:  # Truncate long names when compressed
+                                formatted_team = formatted_team[:10] + ".."
+                            
+                            # Add team to the line
+                            if line:
+                                line += " | "
+                            line += f"{k+1}.{formatted_team}"
+                        except Exception:
+                            # Handle error
+                            if line:
+                                line += " | "
+                            line += f"{k+1}.[Error]"
+
+                        # Display the line with all teams for this row
+                        if line:
+                            # Determine if this contains a champion
+                            is_champion = (round_idx == len(round_sizes) - 1)
+                            
+                            # Set appropriate color
+                            if is_champion:
+                                stdscr.attron(curses.color_pair(colors['champion']) | curses.A_BOLD)
+                            else:
+                                stdscr.attron(curses.color_pair(colors['team']))
+                            
+                            # Display the line
+                            stdscr.addstr(current_y, col_x, line[:column_widths[round_idx]])
+                            
+                            # Reset color
+                            if is_champion:
+                                stdscr.attroff(curses.color_pair(colors['champion']) | curses.A_BOLD)
+                            else:
+                                stdscr.attroff(curses.color_pair(colors['team']))
+                        
+                        current_y += 1
+                        if current_y >= max_y - 5:  # Still respect the footer space
+                            # Add an indicator that there are more teams
+                            stdscr.addstr(current_y - 1, col_x, "... more teams")
+                            break
         
         # Special display for the champion (only on the last page)
         if end_round == len(round_sizes) and len(bracket_list) > 0:
@@ -229,4 +270,3 @@ def format_bracket(stdscr, bracket_list, bracket_num, round_sizes, round_names, 
         elif key == 10 or key == 13 or key == curses.KEY_ENTER:  # Enter key
             return "next"
             
-        # Any other key just refreshes the current view

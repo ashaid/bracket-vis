@@ -31,7 +31,6 @@ def main(stdscr):
     try:
         brackets = parse_input_file(filename)
         
-        
         if not brackets:
             show_error_screen(stdscr, "No valid brackets found in the input file.")
             return
@@ -45,23 +44,23 @@ def main(stdscr):
                 current_bracket = len(brackets) - 1
             elif current_bracket >= len(brackets):
                 current_bracket = 0
-                
+        
             # Skip empty brackets
             if not brackets[current_bracket]:
                 current_bracket += 1
                 continue
-                
+            
             # Calculate round sizes and names for the current bracket
             round_sizes = calculate_round_sizes(brackets[current_bracket])
             round_names = get_round_names(round_sizes)
             
             # Display the bracket
             result = format_bracket(
-                stdscr, 
-                brackets[current_bracket], 
-                current_bracket + 1, 
-                round_sizes, 
-                round_names, 
+                stdscr,
+                brackets[current_bracket],
+                current_bracket + 1,
+                round_sizes,
+                round_names,
                 total_brackets=len(brackets)
             )
             
@@ -76,6 +75,9 @@ def main(stdscr):
                 # Default to next
                 current_bracket += 1
                 
+            # Clear the screen before showing the next bracket
+            stdscr.clear()
+            
     except FileNotFoundError:
         show_error_screen(stdscr, f"File not found: {filename}")
     except Exception as e:
@@ -83,7 +85,6 @@ def main(stdscr):
         import traceback
         traceback.print_exc()
         show_error_screen(stdscr, str(e))
-
 
 if __name__ == "__main__":
     wrapper(main)  # curses wrapper handles setup/teardown
